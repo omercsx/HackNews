@@ -18,7 +18,8 @@ struct HomeView: View {
                 Text("New").tag(2)
             }.pickerStyle(.segmented)
             
-            if filter == 0 {
+            
+            if filter == 0 { // top
                 ScrollView {
                     VStack(alignment: .leading, spacing: 15) {
                         if viewModel.topStories.isEmpty {
@@ -31,20 +32,64 @@ struct HomeView: View {
                         }
                     }
                     .padding()
-                    .onAppear {
-                        viewModel.loadData()
+                }
+                .onAppear {
+                    if (viewModel.topStories.isEmpty) {
+                        viewModel.loadTopStories()
                     }
                 }
+                .refreshable {
+                    viewModel.loadTopStories()
+                }
+                
             }
-            else if filter == 1 {
-                Text("Best Stories")
+            else if filter == 1 { // best
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 15) {
+                        if viewModel.bestStories.isEmpty {
+                            ProgressView("Loading...")
+                                .padding()
+                        } else {
+                            ForEach(viewModel.bestStories) { story in
+                                StoryPreviewView(story: story)
+                            }
+                        }
+                    }
+                    .padding()
+                }
+                .onAppear {
+                    if viewModel.bestStories.isEmpty {
+                        viewModel.loadBestStories()
+                    }
+                }
+                .refreshable {
+                    viewModel.loadBestStories()
+                }
             }
-            else {
-                Text("New Stories")
+            else { // new
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 15) {
+                        if viewModel.newStories.isEmpty {
+                            ProgressView("Loading...")
+                                .padding()
+                        } else {
+                            ForEach(viewModel.newStories) { story in
+                                StoryPreviewView(story: story)
+                            }
+                        }
+                    }
+                    .padding()
+                }
+                .onAppear {
+                    if viewModel.newStories.isEmpty {
+                        viewModel.loadNewStories()
+                    }
+                }
+                .refreshable {
+                    viewModel.loadNewStories()
+                }
             }
-        
         }
-        
     }
 }
 
