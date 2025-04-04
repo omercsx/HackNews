@@ -1,5 +1,5 @@
 //
-//  StoryPreviewView.swift
+//  StoryDetailView.swift
 //  HackNews
 //
 //  Created by Chaoyi Wu on 2025-04-04.
@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-struct StoryPreviewView: View {
+struct StoryDetailView: View {
     
     let story: Story
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(story.title)
-                .font(.title3)
+                .font(.title2)
                 .bold()
             Text("by " + story.by)
-            
+                .foregroundStyle(.gray)
             HStack(spacing: 50) {
                 Text(String(story.score) + " points")
                     .foregroundStyle(.orange)
@@ -25,19 +25,22 @@ struct StoryPreviewView: View {
                 Text(String(story.descendants!) + " comments")
                 Text(String(story.timeAgo))
             }
-            .font(.footnote)
+            .font(.callout)
+            if (story.url == nil) {
+                Text("No URL available")
+            }
+            else {
+                Link("Tap to read the full story in the browser", destination: URL(string: story.url!)!)
+            }
+            
+            
         }
-        .frame(
-            minWidth: 0, maxWidth: .infinity,            alignment: .topLeading
-        )
         .padding()
-        .background(Color(UIColor.systemGray5))
-        .cornerRadius(15)
     }
 }
 
 #Preview {
-    StoryPreviewView(story: Story(
+    StoryDetailView(story: Story(
         by: "ascorbic",
         descendants: 195,
         id: 43538853,
