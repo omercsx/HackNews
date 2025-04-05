@@ -21,11 +21,13 @@ struct StoryPreviewView: View {
                     .foregroundStyle(.black)
                 Text("by " + story.by)
                     .foregroundStyle(.gray)
-                HStack(spacing: 50) {
+                HStack {
                     Text(String(story.score) + " points")
                         .foregroundStyle(.orange)
+                    Spacer()
                     Text(String(story.descendants!) + " comments")
                         .foregroundStyle(.black)
+                    Spacer()
                     Text(String(story.timeAgo))
                         .foregroundStyle(.black)
                 }

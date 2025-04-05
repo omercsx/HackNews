@@ -40,6 +40,7 @@ struct CommentView: View {
                     VStack(alignment: .leading, spacing: 10) {
                         if comment.kidComments.isEmpty {
                             ProgressView("Loading comments...")
+                                .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
                                 .onAppear {
                                 Task {
                                     comment.wrappedValue.kidComments = await viewModel.getComments(ids: comment.wrappedValue.kids)
