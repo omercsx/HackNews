@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Story: Codable, Identifiable {
+struct Story: Codable, Identifiable, Hashable {
     let by: String
     var descendants: Int? // the total comment count
     let id: Int

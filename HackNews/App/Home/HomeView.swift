@@ -7,88 +7,29 @@
 
 import SwiftUI
 
+enum StoryType: String {
+    case topstories, beststories, newstories
+}
+
 struct HomeView: View {
-    @StateObject var viewModel = HomeViewModel()
-    @State private var filter = 0
+    @State private var filter: StoryType = .topstories
     var body: some View {
         NavigationView {
             VStack {
                 Picker("", selection: $filter) {
-                    Text("Top").tag(0)
-                    Text("Best").tag(1)
-                    Text("New").tag(2)
+                    Text("Top").tag(StoryType.topstories)
+                    Text("Best").tag(StoryType.beststories)
+                    Text("New").tag(StoryType.newstories)
                 }.pickerStyle(.segmented)
                 
-                
-                if filter == 0 { // top
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 15) {
-                            if viewModel.topStories.isEmpty {
-                                ProgressView("Loading...")
-                                    .padding()
-                            } else {
-                                ForEach(viewModel.topStories) { story in
-                                    StoryPreviewView(story: story)
-                                }
-                            }
-                        }
-                        .padding()
-                    }
-                    .onAppear {
-                        if (viewModel.topStories.isEmpty) {
-                            viewModel.loadTopStories()
-                        }
-                    }
-                    .refreshable {
-                        viewModel.loadTopStories()
-                    }
-                    
+                if filter == .topstories {
+                    StoryListView(storyType: filter)
                 }
-                else if filter == 1 { // best
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 15) {
-                            if viewModel.bestStories.isEmpty {
-                                ProgressView("Loading...")
-                                    .padding()
-                            } else {
-                                ForEach(viewModel.bestStories) { story in
-                                    StoryPreviewView(story: story)
-                                }
-                            }
-                        }
-                        .padding()
-                    }
-                    .onAppear {
-                        if viewModel.bestStories.isEmpty {
-                            viewModel.loadBestStories()
-                        }
-                    }
-                    .refreshable {
-                        viewModel.loadBestStories()
-                    }
+                else if filter == .beststories {
+                    StoryListView(storyType: filter)
                 }
-                else { // new
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 15) {
-                            if viewModel.newStories.isEmpty {
-                                ProgressView("Loading...")
-                                    .padding()
-                            } else {
-                                ForEach(viewModel.newStories) { story in
-                                    StoryPreviewView(story: story)
-                                }
-                            }
-                        }
-                        .padding()
-                    }
-                    .onAppear {
-                        if viewModel.newStories.isEmpty {
-                            viewModel.loadNewStories()
-                        }
-                    }
-                    .refreshable {
-                        viewModel.loadNewStories()
-                    }
+                else {
+                    StoryListView(storyType: filter)
                 }
             }
         }
