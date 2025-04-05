@@ -1,5 +1,5 @@
 //
-//  Story.swift
+//  Common.swift
 //  HackNews
 //
 //  Created by Chaoyi Wu on 2025-04-04.
@@ -7,15 +7,8 @@
 
 import Foundation
 
-struct Story: Codable, Identifiable {
-    let by: String
-    var descendants: Int? // the total comment count
-    let id: Int
-    let kids: [Int]?
-    let score: Int
-    let text: String?
-    let time: TimeInterval //Creation date of the item, in Unix Time
-    var timeAgo: String {
+struct Common {
+    static func UnixTimeToTimeAgo(time: TimeInterval) -> String {
         let date = Date(timeIntervalSince1970: time)
         let now = Date()
         let calendar = Calendar.current
@@ -36,6 +29,4 @@ struct Story: Codable, Identifiable {
             return "just now"
         }
     }
-    let title: String
-    let url: String?
 }

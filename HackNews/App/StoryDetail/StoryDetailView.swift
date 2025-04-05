@@ -10,6 +10,7 @@ import SwiftUI
 struct StoryDetailView: View {
     
     let story: Story
+    @State private var showComments: Bool = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -18,21 +19,36 @@ struct StoryDetailView: View {
                 .bold()
             Text("by " + story.by)
                 .foregroundStyle(.gray)
-            HStack(spacing: 50) {
+            HStack(spacing: 30) {
                 Text(String(story.score) + " points")
                     .foregroundStyle(.orange)
                     
                 Text(String(story.descendants!) + " comments")
                 Text(String(story.timeAgo))
             }
-            .font(.callout)
-            if (story.url == nil) {
-                Text("No URL available")
+            if (story.text != nil) {
+                Text(story.text!)
             }
-            else {
-                Link("Tap to read the full story in the browser", destination: URL(string: story.url!)!)
+            if (story.url != nil) {
+                Link("External Link", destination: URL(string: story.url!)!)
+            }
+            Spacer()
+            if (story.kids != nil && !story.kids!.isEmpty) {
+                Button(action: {
+                    showComments.toggle()
+                }, label: {
+                    Text(showComments ? "Hide Comments" : "View Comments")
+                        .foregroundStyle(.orange)
+                })
+                .frame(maxWidth: .infinity, alignment: .center)
             }
             
+            if showComments {
+                ScrollView {
+                    CommentView(commentIds: story.kids!)
+                        .padding(.top)
+                }
+            }
             
         }
         .padding()
@@ -41,13 +57,14 @@ struct StoryDetailView: View {
 
 #Preview {
     StoryDetailView(story: Story(
-        by: "ascorbic",
-        descendants: 195,
-        id: 43538853,
-        kids: [ 43579483, 43579062, 43585110, 43579065, 43580486, 43578638, 43579421, 43583435, 43579827, 43583488, 43581030, 43579018, 43584722, 43580369, 43581078, 43580625, 43579548 ],
-        score: 292,
-        time: 1743449429,
-        title: "New antibiotic that kills drug-resistant bacteria found in technician's garden",
-        url: "https://www.nature.com/articles/d41586-025-00945-z"
+        by: "rbizyrbiz",
+        descendants: 0,
+        id: 43587764,
+        kids: nil,
+        score: 2,
+        text: "I'm living on a small SaaS that will hopefully sustain myself into retirement and give a little income (have had some past exits that I am lucky for, this one will probably cap out on TAM, but good enough) That said, I'm funding & developing this all myself and I'm looking to move myself and the company out of the US. I'm sure the US is still the top place to run a startup for financial & networking reasons, but I don't need that for this one and I'd rather deal with a little more red tape in a country I feel aligns better w my values. I'm just curious if anyone has made this kind of move , and any advice on how to do it right for a small 1-2 person profitable LLC?",
+        time: 1743802094,
+        title: "I'm So Bored with the USA",
+        url: nil
     ))
 }

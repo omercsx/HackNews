@@ -8,10 +8,10 @@
 import Foundation
 
 struct Comment: Codable {
-    let by: String
+    let by: String?
     let id: Int
-    let kids: [Int]
+    let kids: [Int]?
     let parent: Int
-    let text: String
-    let time: Int
+    let text: String?
+    let time: TimeInterval
 }
