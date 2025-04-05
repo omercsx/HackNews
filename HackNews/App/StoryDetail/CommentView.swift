@@ -11,6 +11,7 @@ struct CommentView: View {
     @StateObject var viewModel = CommentViewModel()
     
     let commentIds: [Int]
+    let op: String
     
     @State private var comments: [DisplayComment] = []
     
@@ -19,7 +20,14 @@ struct CommentView: View {
         AnyView(
             VStack(alignment: .leading, spacing: 10) {
                 HStack(spacing: 20) {
-                    Text(comment.wrappedValue.by)
+                    if comment.wrappedValue.by == op {
+                        Text("\(comment.wrappedValue.by) OP")
+                            .bold()
+                            .foregroundStyle(.orange)
+                    }
+                    else {
+                        Text(comment.wrappedValue.by)
+                    }
                     Text(comment.wrappedValue.timeAgo)
                 }
                 .foregroundStyle(.gray)
@@ -76,6 +84,7 @@ struct CommentView: View {
                 }
             }
         }
+        .padding()
         .onAppear {
             Task {
                 comments = await viewModel.getComments(ids: commentIds)

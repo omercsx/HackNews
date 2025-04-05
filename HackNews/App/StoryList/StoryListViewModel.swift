@@ -15,12 +15,12 @@ final class StoryListViewModel: ObservableObject {
     private var loadedStories = 0
     private let maxStories = 500
     
-    func getAllStoryIds(storyType: StoryType) async throws {
+    private func getAllStoryIds(storyType: StoryType) async throws {
         let url = URL(string: "https://hacker-news.firebaseio.com/v0/\(storyType).json?print=pretty")!
         let (data, _) = try await URLSession.shared.data(from: url)
         fetchedStoryIds = try JSONDecoder().decode([Int].self, from: data)
     }
-    func getStoryById(id: Int) async throws -> Story {
+    private func getStoryById(id: Int) async throws -> Story {
         let url = URL(string: "https://hacker-news.firebaseio.com/v0/item/" + String(id) + ".json?print=pretty")!
         let (data, _) = try await URLSession.shared.data(from: url)
         var story = try JSONDecoder().decode(Story.self, from: data)

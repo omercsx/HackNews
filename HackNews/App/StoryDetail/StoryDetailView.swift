@@ -14,49 +14,47 @@ struct StoryDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 10) {
-                Text(story.title)
-                    .font(.title2)
-                    .bold()
-                Text("by " + story.by)
-                    .foregroundStyle(.gray)
-                HStack {
-                    Text(String(story.score) + " points")
-                        .foregroundStyle(.orange)
+            VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(story.title)
+                        .font(.title2)
+                        .bold()
+                    Text("by " + story.by)
+                        .foregroundStyle(.gray)
+                    HStack {
+                        Text(String(story.score) + " points")
+                            .foregroundStyle(.orange)
+                        Spacer()
+                        Text(String(story.descendants!) + " comments")
+                        Spacer()
+                        Text(String(story.timeAgo))
+                    }
+                    if (story.text != nil) {
+                        Text(Common.decodeHTML(story.text!))
+                    }
+                    if (story.url != nil) {
+                        Link("External Link", destination: URL(string: story.url!)!)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
                     Spacer()
-                    Text(String(story.descendants!) + " comments")
-                    Spacer()
-                    Text(String(story.timeAgo))
-                }
-                if (story.text != nil) {
-                    Text(Common.decodeHTML(story.text!))
-                        .padding()
-                }
-                if (story.url != nil) {
-                    Link("External Link", destination: URL(string: story.url!)!)
+                    if (story.kids != nil && !story.kids!.isEmpty) {
+                        Button(action: {
+                            showComments.toggle()
+                        }, label: {
+                            Text(showComments ? "Hide Comments" : "View Comments")
+                                .foregroundStyle(.orange)
+                        })
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .center)
-                }
-                if (story.kids != nil && !story.kids!.isEmpty) {
-                    Button(action: {
-                        showComments.toggle()
-                    }, label: {
-                        Text(showComments ? "Hide Comments" : "View Comments")
-                            .foregroundStyle(.orange)
-                    })
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .center)
-                }
-                
-                if showComments {
-                    ScrollView {
-                        CommentView(commentIds: story.kids!)
-                            .padding(.top)
                     }
                 }
+                .padding()
                 
+                if showComments {
+                    CommentView(commentIds: story.kids!, op: story.by)
+                }
             }
-            .padding()
         }
     }
 }
