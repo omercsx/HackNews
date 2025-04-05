@@ -29,7 +29,7 @@ struct StoryDetailView: View {
                     Text(String(story.timeAgo))
                 }
                 if (story.text != nil) {
-                    Text(story.text!)
+                    Text(Common.decodeHTML(story.text!))
                         .padding()
                 }
                 if (story.url != nil) {

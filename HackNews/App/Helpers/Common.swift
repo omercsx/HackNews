@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit // for NSAttributedString
 
 struct Common {
     static func UnixTimeToTimeAgo(time: TimeInterval) -> String {
@@ -28,5 +29,16 @@ struct Common {
         } else {
             return "just now"
         }
+    }
+    
+    static func decodeHTML(_ html: String) -> String {
+        guard let data = html.data(using: .utf8) else { return html }
+        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
+            .documentType: NSAttributedString.DocumentType.html,
+            .characterEncoding: String.Encoding.utf8.rawValue
+        ]
+        
+        let attributedString = try? NSAttributedString(data: data, options: options, documentAttributes: nil)
+        return attributedString?.string ?? html
     }
 }

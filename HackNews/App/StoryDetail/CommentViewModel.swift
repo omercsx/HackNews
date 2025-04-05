@@ -6,8 +6,9 @@
 //
 
 import Foundation
+
 final class CommentViewModel: ObservableObject {
-    
+
     func getComments(ids: [Int]) async -> [DisplayComment] {
         var comments: [DisplayComment] = []
         do {
@@ -15,15 +16,17 @@ final class CommentViewModel: ObservableObject {
                 let url = URL(string: "https://hacker-news.firebaseio.com/v0/item/\(String(id)).json?print=pretty")!
                 let (data, _) = try await URLSession.shared.data(from: url)
                 let comment = try JSONDecoder().decode(Comment.self, from: data)
-                let displayComment = DisplayComment(
-                    by: comment.by ?? "[unknown]",
-                    id: comment.id,
-                    kids: comment.kids ?? [],
-                    parent: comment.parent,
-                    text: comment.text ?? "[empty comment]",
-                    timeAgo: Common.UnixTimeToTimeAgo(time: comment.time)
-                )
-                comments.append(displayComment)
+                if (comment.text != nil) {
+                    let displayComment = DisplayComment(
+                        by: comment.by ?? "[unknown account]",
+                        id: comment.id,
+                        kids: comment.kids ?? [],
+                        parent: comment.parent,
+                        text: Common.decodeHTML(comment.text!),
+                        timeAgo: Common.UnixTimeToTimeAgo(time: comment.time)
+                    )
+                    comments.append(displayComment)
+                }
             }
         }
         catch {
