@@ -31,11 +31,6 @@ struct ContentView: View {
                     Label("HackFeed", systemImage: "newspaper")
                 }
             
-            SearchView()
-                .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
-                }
-            
             FavoritesView()
                 .tabItem {
                     Label("Favorites", systemImage: "star")
