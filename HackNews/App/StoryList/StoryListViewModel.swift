@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HackNewsShared
 
 final class StoryListViewModel: ObservableObject {
     @Published var stories: [Story] = []
@@ -20,14 +21,24 @@ final class StoryListViewModel: ObservableObject {
         let (data, _) = try await URLSession.shared.data(from: url)
         fetchedStoryIds = try JSONDecoder().decode([Int].self, from: data)
     }
+    
     private func getStoryById(id: Int) async throws -> Story {
         let url = URL(string: "https://hacker-news.firebaseio.com/v0/item/" + String(id) + ".json?print=pretty")!
         let (data, _) = try await URLSession.shared.data(from: url)
-        var story = try JSONDecoder().decode(Story.self, from: data)
-        if (story.descendants == nil) {
-            story.descendants = 0
-        }
-        return story
+        let decodedStory = try JSONDecoder().decode(Story.self, from: data)
+        
+        // Create a new Story instance with default value for descendants if nil
+        return Story(
+            id: decodedStory.id,
+            title: decodedStory.title,
+            url: decodedStory.url,
+            score: decodedStory.score,
+            by: decodedStory.by,
+            time: decodedStory.time,
+            descendants: decodedStory.descendants ?? 0,
+            text: decodedStory.text,
+            kids: decodedStory.kids
+        )
     }
     
     func reloadStories(storyType: StoryType) { // pull down to refresh
@@ -54,9 +65,9 @@ final class StoryListViewModel: ObservableObject {
                 if (self.fetchedStoryIds.isEmpty) {
                     try await self.getAllStoryIds(storyType: storyType)
                 }
-                for i in 0..<maxFetchStories {
+                for index in 0..<maxFetchStories {
                     self.loadedStories += 1
-                    let story = try await getStoryById(id: fetchedStoryIds[i])
+                    let story = try await getStoryById(id: fetchedStoryIds[index])
                     if !self.stories.contains(where: { $0.id == story.id }) {
                         self.stories.append(story)
                     }

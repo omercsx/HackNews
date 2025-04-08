@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import HackNewsShared
 
 struct StoryDetailView: View {
     
@@ -41,10 +42,10 @@ struct StoryDetailView: View {
                         .foregroundStyle(.gray)
                     
                     HStack {
-                        Text(String(story.score) + " points")
+                        Text(String(story.score ?? 0) + " points")
                             .foregroundStyle(.orange)
                         Spacer()
-                        Text(String(story.descendants ?? 0) + " comments")
+                        Text(String(story.descendants) + " comments")
                         Spacer()
                         Text(String(story.timeAgo))
                     }
@@ -83,20 +84,3 @@ struct StoryDetailView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        StoryDetailView(story: Story(
-            by: "rbizyrbiz",
-            descendants: 0,
-            id: 43587764,
-            kids: nil,
-            score: 2,
-            text: "Sample story text for preview purposes...",
-            time: 1743802094,
-            title: "I'm So Bored with the USA",
-            url: "External Link"
-        ))
-        .environmentObject(AuthViewModel())
-        .environmentObject(FavoritesViewModel())
-    }
-}
