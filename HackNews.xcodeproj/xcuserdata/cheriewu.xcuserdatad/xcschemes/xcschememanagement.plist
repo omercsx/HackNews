@@ -12,17 +12,30 @@
 		<key>HackNewsShared.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>0</integer>
 		</dict>
 		<key>HackNewsWidgetExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
-		<key>Promises (Playground).xcscheme</key>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>06C9EAF22D98230600647958</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>0</integer>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>06EAC6222DA5AC9C0090E587</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>06EAC64D2DA5ADDF0090E587</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

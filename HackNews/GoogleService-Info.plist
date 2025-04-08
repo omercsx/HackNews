@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAratKXkZ3qReZ2tZr8F28_7Ou8mGZcR0c</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1074311875222</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.cagrisayir.HackNews</string>
+	<key>PROJECT_ID</key>
+	<string>hacknews-696fe</string>
+	<key>STORAGE_BUCKET</key>
+	<string>hacknews-696fe.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1074311875222:ios:895c9951dfd228ec1910b7</string>
+</dict>
+</plist>

@@ -8,14 +8,39 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var authViewModel = AuthViewModel()
+    @StateObject var favoritesViewModel = FavoritesViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if authViewModel.userSession == nil {
+                LoginView()
+                    .environmentObject(authViewModel)
+            } else {
+                mainAppTabView
+                    .environmentObject(authViewModel)
+                    .environmentObject(favoritesViewModel)
+            }
         }
-        .padding()
+    }
+    
+    var mainAppTabView: some View {
+        TabView {
+            HomeView()
+                .tabItem {
+                    Label("HackFeed", systemImage: "newspaper")
+                }
+            
+            FavoritesView()
+                .tabItem {
+                    Label("Favorites", systemImage: "star")
+                }
+            
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gear")
+                }
+        }
     }
 }
 
