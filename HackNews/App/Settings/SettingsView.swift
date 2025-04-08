@@ -45,10 +45,10 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Preferences")) {
-                    Toggle("Dark Mode", isOn: $isDarkMode)
-                        .onChange(of: isDarkMode) { _ in
-                            // To be implemented when theme handling is added
-                        }
+//                    Toggle("Dark Mode", isOn: $isDarkMode)
+//                        .onChange(of: isDarkMode) { _ in
+//                            // To be implemented when theme handling is added
+//                        }
                     
                     Toggle("Favorite Notifications", isOn: $favoritesViewModel.notificationsEnabled)
                         .onChange(of: favoritesViewModel.notificationsEnabled) { _ in

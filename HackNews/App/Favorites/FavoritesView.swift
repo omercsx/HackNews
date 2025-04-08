@@ -65,7 +65,7 @@ struct FavoritesView: View {
                             .font(.title)
                             .foregroundColor(.gray)
                         
-                        Text("Stories you favorite will appear here")
+                        Text("Your Favorite Stories Will Appear Here")
                             .foregroundColor(.gray)
                     }
                     .padding()

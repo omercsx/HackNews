@@ -7,7 +7,35 @@
 		<key>HackNews.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>HackNewsShared.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>HackNewsWidgetExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>06C9EAF22D98230600647958</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>06EAC6222DA5AC9C0090E587</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>06EAC64D2DA5ADDF0090E587</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
