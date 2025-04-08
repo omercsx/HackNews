@@ -11,33 +11,56 @@ struct StoryDetailView: View {
     
     let story: Story
     @State private var showComments: Bool = false
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var favoritesViewModel: FavoritesViewModel
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(story.title)
-                        .font(.title2)
-                        .bold()
+                    HStack {
+                        Text(story.title)
+                            .font(.title2)
+                            .bold()
+                        
+                        Spacer()
+                        
+                        if authViewModel.userSession != nil {
+                            Button {
+                                favoritesViewModel.toggleFavorite(story: story)
+                            } label: {
+                                Image(systemName: favoritesViewModel.isFavorite(storyId: story.id) ? "star.fill" : "star")
+                                    .foregroundColor(favoritesViewModel.isFavorite(storyId: story.id) ? .yellow : .gray)
+                                    .font(.title2)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
+                    }
+                    
                     Text("by " + story.by)
                         .foregroundStyle(.gray)
+                    
                     HStack {
                         Text(String(story.score) + " points")
                             .foregroundStyle(.orange)
                         Spacer()
-                        Text(String(story.descendants!) + " comments")
+                        Text(String(story.descendants ?? 0) + " comments")
                         Spacer()
                         Text(String(story.timeAgo))
                     }
+                    
                     if (story.text != nil) {
                         Text(Common.decodeHTML(story.text!))
                     }
+                    
                     if (story.url != nil) {
                         Link("External Link", destination: URL(string: story.url!)!)
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
+                    
                     Spacer()
+                    
                     if (story.kids != nil && !story.kids!.isEmpty) {
                         Button(action: {
                             showComments.toggle()
@@ -56,19 +79,24 @@ struct StoryDetailView: View {
                 }
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    StoryDetailView(story: Story(
-        by: "rbizyrbiz",
-        descendants: 0,
-        id: 43587764,
-        kids: nil,
-        score: 2,
-        text: "I'm living on a small SaaS that will hopefully sustain myself into retirement and give a little income (have had some past exits that I am lucky for, this one will probably cap out on TAM, but good enough) That said, I'm funding & developing this all myself and I'm looking to move myself and the company out of the US. I'm sure the US is still the top place to run a startup for financial & networking reasons, but I don't need that for this one and I'd rather deal with a little more red tape in a country I feel aligns better w my values. I'm just curious if anyone has made this kind of move , and any advice on how to do it right for a small 1-2 person profitable LLC?",
-        time: 1743802094,
-        title: "I'm So Bored with the USA",
-        url: "External Link"
-    ))
+    NavigationStack {
+        StoryDetailView(story: Story(
+            by: "rbizyrbiz",
+            descendants: 0,
+            id: 43587764,
+            kids: nil,
+            score: 2,
+            text: "Sample story text for preview purposes...",
+            time: 1743802094,
+            title: "I'm So Bored with the USA",
+            url: "External Link"
+        ))
+        .environmentObject(AuthViewModel())
+        .environmentObject(FavoritesViewModel())
+    }
 }

@@ -10,6 +10,8 @@ import SwiftUI
 struct StoryListView: View {
     let storyType: StoryType
     @StateObject var viewModel = StoryListViewModel()
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var favoritesViewModel: FavoritesViewModel
     
     var body: some View {
         ScrollView {
@@ -27,7 +29,9 @@ struct StoryListView: View {
                 } else {
                     ForEach(viewModel.stories, id: \.self) { story in
                         StoryPreviewView(story: story)
-                            .onAppear{
+                            .environmentObject(authViewModel)
+                            .environmentObject(favoritesViewModel)
+                            .onAppear {
                                 Task {
                                     viewModel.shouldLoadMore(id: story.id, storyType: storyType)
                                 }
@@ -44,4 +48,10 @@ struct StoryListView: View {
             viewModel.reloadStories(storyType: storyType)
         }
     }
+}
+
+#Preview {
+    StoryListView(storyType: .topstories)
+        .environmentObject(AuthViewModel())
+        .environmentObject(FavoritesViewModel())
 }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseCore
+import FirebaseFirestore
 
 class AppDelegate: NSObject, UIApplicationDelegate {
 
@@ -15,6 +16,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
     FirebaseApp.configure()
+
+    // Set up Firestore settings if needed
+    let db = Firestore.firestore()
+    let settings = db.settings
+    // Uncomment to use local emulator for testing
+    // settings.host = "localhost:8080"
+    // settings.isSSLEnabled = false
+    db.settings = settings
 
     return true
   }

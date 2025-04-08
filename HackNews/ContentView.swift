@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var authViewModel = AuthViewModel()
+    @StateObject var favoritesViewModel = FavoritesViewModel()
     
     var body: some View {
         Group {
@@ -18,6 +19,7 @@ struct ContentView: View {
             } else {
                 mainAppTabView
                     .environmentObject(authViewModel)
+                    .environmentObject(favoritesViewModel)
             }
         }
     }

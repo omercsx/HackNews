@@ -8,36 +8,53 @@
 import SwiftUI
 
 struct StoryPreviewView: View {
-    
     let story: Story
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var favoritesViewModel: FavoritesViewModel
     
     var body: some View {
-        NavigationLink(destination: StoryDetailView(story: story)) {
-            VStack(alignment: .leading, spacing: 10) {
-                Text(story.title)
-                    .multilineTextAlignment(.leading)
-                    .font(.title3)
-                    .bold()
-                    .foregroundStyle(.black)
-                Text("by " + story.by)
-                    .foregroundStyle(.gray)
-                HStack {
-                    Text(String(story.score) + " points")
-                        .foregroundStyle(.orange)
-                    Spacer()
-                    Text(String(story.descendants!) + " comments")
+        HStack(alignment: .top) {
+            // Story content link
+            NavigationLink(destination: StoryDetailView(story: story)) {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(story.title)
+                        .multilineTextAlignment(.leading)
+                        .font(.title3)
+                        .bold()
                         .foregroundStyle(.black)
-                    Spacer()
-                    Text(String(story.timeAgo))
-                        .foregroundStyle(.black)
+                    Text("by " + story.by)
+                        .foregroundStyle(.gray)
+                    HStack {
+                        Text(String(story.score) + " points")
+                            .foregroundStyle(.orange)
+                        Spacer()
+                        Text(String(story.descendants ?? 0) + " comments")
+                            .foregroundStyle(.black)
+                        Spacer()
+                        Text(String(story.timeAgo))
+                            .foregroundStyle(.black)
+                    }
+                    .font(.footnote)
                 }
-                .font(.footnote)
             }
-            .padding()
-            .frame(
-                minWidth: 0, maxWidth: .infinity, alignment: .topLeading
-            )
+            
+            // Favorite button
+            if authViewModel.userSession != nil {
+                Button {
+                    favoritesViewModel.toggleFavorite(story: story)
+                } label: {
+                    Image(systemName: favoritesViewModel.isFavorite(storyId: story.id) ? "star.fill" : "star")
+                        .foregroundColor(favoritesViewModel.isFavorite(storyId: story.id) ? .yellow : .gray)
+                        .font(.title2)
+                        .padding(.horizontal, 8)
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
         }
+        .padding()
+        .frame(
+            minWidth: 0, maxWidth: .infinity, alignment: .topLeading
+        )
         .background(Color(UIColor.systemGray5))
         .cornerRadius(15)
     }
@@ -55,4 +72,6 @@ struct StoryPreviewView: View {
         title: "New antibiotic that kills drug-resistant bacteria found in technician's garden",
         url: "https://www.nature.com/articles/d41586-025-00945-z"
     ))
+    .environmentObject(AuthViewModel())
+    .environmentObject(FavoritesViewModel())
 }
