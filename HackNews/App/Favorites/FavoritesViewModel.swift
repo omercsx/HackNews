@@ -1,17 +1,60 @@
 import SwiftUI
 import FirebaseFirestore
 import FirebaseAuth
+import UserNotifications
 
 class FavoritesViewModel: ObservableObject {
     @Published var favoriteStories: [Story] = []
     @Published var favoriteIds: Set<Int> = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var notificationsEnabled = true
     
     private let db = Firestore.firestore()
+    private let notificationManager = SystemNotification.shared
     
     init() {
         loadFavorites()
+        loadNotificationPreference()
+        requestNotificationPermission()
+    }
+    
+    private func requestNotificationPermission() {
+        notificationManager.requestAuthorization { granted, error in
+            if let error = error {
+                print("Notification permission error: \(error.localizedDescription)")
+            }
+            
+            // Update our local state based on system permissions
+            self.notificationsEnabled = granted
+            self.saveNotificationPreference()
+        }
+    }
+    
+    private func loadNotificationPreference() {
+        self.notificationsEnabled = UserDefaults.standard.bool(forKey: "favoritesNotificationsEnabled")
+    }
+    
+    func saveNotificationPreference() {
+        UserDefaults.standard.set(notificationsEnabled, forKey: "favoritesNotificationsEnabled")
+    }
+    
+    func toggleNotifications() {
+        if !notificationsEnabled {
+            // User is enabling notifications, request permission if needed
+            notificationManager.checkAuthorizationStatus { status in
+                if status != .authorized {
+                    self.requestNotificationPermission()
+                } else {
+                    self.notificationsEnabled = true
+                    self.saveNotificationPreference()
+                }
+            }
+        } else {
+            // User is disabling notifications
+            self.notificationsEnabled = false
+            saveNotificationPreference()
+        }
     }
     
     func loadFavorites() {
@@ -95,6 +138,19 @@ class FavoritesViewModel: ObservableObject {
         }
     }
     
+    private func sendAddedToFavoritesNotification(for story: Story) {
+        // Only send notifications if enabled
+        guard notificationsEnabled else { return }
+        
+        // Use the system notification manager to send notification
+        notificationManager.sendNotification(
+            type: .favorite,
+            title: "Added to Favorites",
+            body: "You've added \"\(story.title)\" to your favorites",
+            identifier: "favorite-\(story.id)-\(UUID().uuidString)"
+        )
+    }
+    
     func toggleFavorite(story: Story) {
         guard let userId = Auth.auth().currentUser?.uid else {
             self.errorMessage = "Please login to manage favorites"
@@ -140,6 +196,9 @@ class FavoritesViewModel: ObservableObject {
                     if !self.favoriteStories.contains(where: { $0.id == storyId }) {
                         self.favoriteStories.append(story)
                         self.favoriteStories.sort(by: { $0.time > $1.time })
+                        
+                        // Send notification when adding to favorites
+                        self.sendAddedToFavoritesNotification(for: story)
                     }
                 }
             }

@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 struct SettingsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var favoritesViewModel: FavoritesViewModel
+    @State private var isDarkMode = false
     
     var body: some View {
         NavigationStack {
@@ -42,8 +45,15 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Preferences")) {
-                    Toggle("Dark Mode", isOn: .constant(false))
-                    Toggle("Notifications", isOn: .constant(true))
+                    Toggle("Dark Mode", isOn: $isDarkMode)
+                        .onChange(of: isDarkMode) { _ in
+                            // To be implemented when theme handling is added
+                        }
+                    
+                    Toggle("Favorite Notifications", isOn: $favoritesViewModel.notificationsEnabled)
+                        .onChange(of: favoritesViewModel.notificationsEnabled) { _ in
+                            favoritesViewModel.toggleNotifications()
+                        }
                 }
                 
                 Section(header: Text("About")) {
@@ -64,6 +74,19 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .onAppear {
+                checkNotificationPermission()
+            }
+        }
+    }
+    
+    private func checkNotificationPermission() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                if settings.authorizationStatus != .authorized {
+                    favoritesViewModel.notificationsEnabled = false
+                }
+            }
         }
     }
 }
@@ -71,4 +94,5 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
         .environmentObject(AuthViewModel())
+        .environmentObject(FavoritesViewModel())
 }

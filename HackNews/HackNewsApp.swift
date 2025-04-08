@@ -8,11 +8,11 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
+import UserNotifications
 
-class AppDelegate: NSObject, UIApplicationDelegate {
+class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
   func application(_ application: UIApplication,
-
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
     FirebaseApp.configure()
@@ -24,8 +24,46 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     // settings.host = "localhost:8080"
     // settings.isSSLEnabled = false
     db.settings = settings
-
+    
+    // Configure notification handling
+    UNUserNotificationCenter.current().delegate = self
+    
+    // Set up notification categories
+    SystemNotification.shared.setupNotificationCategories()
+    
     return true
+  }
+  
+  // Handle notifications when app is in foreground
+  func userNotificationCenter(_ center: UNUserNotificationCenter, 
+                              willPresent notification: UNNotification, 
+                              withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    // Show notification banner even when app is in foreground
+    completionHandler([.banner, .sound])
+  }
+  
+  // Handle notification response
+  func userNotificationCenter(_ center: UNUserNotificationCenter,
+                              didReceive response: UNNotificationResponse,
+                              withCompletionHandler completionHandler: @escaping () -> Void) {
+    let userInfo = response.notification.request.content.userInfo
+    let categoryIdentifier = response.notification.request.content.categoryIdentifier
+    
+    switch response.actionIdentifier {
+    case UNNotificationDefaultActionIdentifier:
+        // User tapped the notification
+        if categoryIdentifier == "FAVORITE_CATEGORY" {
+            // Handle tapping on favorite notification
+            print("User tapped on favorite notification")
+        }
+    case "OPEN_ACTION":
+        // User tapped the open action
+        print("User tapped open action")
+    default:
+        break
+    }
+    
+    completionHandler()
   }
 }
 
